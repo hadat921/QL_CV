@@ -1,10 +1,25 @@
-import express from 'express'
+require('dotenv').config()
+const express = require('express')
+const { Sequelize } = require('sequelize')
+const authRouter = require('./router/auth')
+
+
+// const sequelize = new Sequelize('test', 'root', 'root', {
+//   host: 'localhost',
+//   dialect: 'postgres'
+// });
+
+
+
 const app = express()
-const hostname = '0.0.0.0'
-const port = 8080
-app.get('/', (req, res) => {
-  res.send  ('<h1>Hello World!</h1><hr>')
-})
-app.listen(port, hostname, () => {
-  console.log(`Hihihihihi ${ hostname }:${ port }/`)
-})
+app.use(express.json())
+
+
+app.use('/api/auth', authRouter)
+
+
+
+
+const PORT = process.env.port || 8080
+
+app.listen(PORT, () => console.log("server chay tren cong hi:" + PORT))

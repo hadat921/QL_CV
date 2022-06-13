@@ -1,15 +1,22 @@
 "use strict";
 
-var _interopRequireDefault = require("@babel/runtime/helpers/interopRequireDefault");
+require('dotenv').config();
 
-var _express = _interopRequireDefault(require("express"));
+var express = require('express');
 
-var app = (0, _express["default"])();
-var hostname = '0.0.0.0';
-var port = 8080;
-app.get('/', function (req, res) {
-  res.send('<h1>Hello World!</h1><hr>');
-});
-app.listen(port, hostname, function () {
-  console.log("Hihihihihi ".concat(hostname, ":").concat(port, "/"));
+var _require = require('sequelize'),
+    Sequelize = _require.Sequelize;
+
+var authRouter = require('./router/auth'); // const sequelize = new Sequelize('test', 'root', 'root', {
+//   host: 'localhost',
+//   dialect: 'postgres'
+// });
+
+
+var app = express();
+app.use(express.json());
+app.use('/api/auth', authRouter);
+var PORT = process.env.port || 8080;
+app.listen(PORT, function () {
+  return console.log("server chay tren cong hi:" + PORT);
 });
