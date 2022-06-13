@@ -2,11 +2,15 @@ const jwt = require('jsonwebtoken')
 
 const verifyToken = (req, res, next) => {
     const authHeader = req.header('Authorization')
+    console.log(authHeader)
     //&& : neu k co authHeader thi no se la authHeader o tren, neu co thi no la authHeader sau &&
     const token = authHeader && authHeader.split(' ')[1]
     if (!token)
-        return res.status(401).json({ success: false, message: 'Access token not found' })
-        //Unauthorized
+        return res.status(401).json({
+            success: false,
+            message: 'Access token not found'
+        })
+    //Unauthorized
 
     try {
         const decoded = jwt.verify(token, process.env.ACESS_TOKEN_SECRET)
@@ -18,7 +22,10 @@ const verifyToken = (req, res, next) => {
 
     } catch (error) {
         console.log(error)
-        return res.status(403).json({ success: false, message: 'Token misssed' })
+        return res.status(403).json({
+            success: false,
+            message: 'Token misssed'
+        })
 
     }
 
