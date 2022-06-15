@@ -1,7 +1,7 @@
 import express from "express";
 import {
     Users
-} from "../models/user"
+} from "../models"
 import {
     Columns
 } from "../models"
@@ -16,11 +16,71 @@ const jwt = require('jsonwebtoken')
 
 const verifyToken = require('../middleware/auth');
 
-router.post('/', async (req, res) => {
+//@get columns by ID
+router.get('/:id', verifyToken, async (req, res) => {
+
+    try {
+
+
+        const columns = await Columns.findByPk(req.params.id)
+        console.log(columns);
+        if (!columns)
+            return res.status(400).json({
+                success: false,
+                message: 'dont find user'
+            })
+        res.json({
+            success: true,
+            columns
+        })
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error'
+        })
+    }
+})
+
+//@get All colums
+router.get('', verifyToken, async (req, res) => {
+    try {
+        const colums = await Columns.findAll({
+            include: [{
+                    model: Cards,
+                    as: "cards"
+                },
+                {
+                    model: Users,
+                    as: "user_info",
+                    attributes: ["id", "userName", "realName", "email", "avatar", "phoneNumber", "createdAt", "updatedAt"]
+                }
+            ]
+
+
+        })
+        res.json({
+            success: true,
+            colums
+        })
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({
+            success: false,
+            message: 'Internal error server 11 hehe'
+        })
+    }
+
+})
+
+//@create columns
+router.post('', verifyToken, async (req, res) => {
 
     const {
         columnName,
-        description
+        description,
+        createColumnBy,
+
     } = req.body
     console.log(req.body)
     if (!columnName)
@@ -30,6 +90,7 @@ router.post('/', async (req, res) => {
         })
     try {
         const newColumns = await Columns.create({
+            createColumnBy: req.userId,
             columnName: columnName,
             description: description
         })
@@ -50,6 +111,7 @@ router.post('/', async (req, res) => {
 
 
 })
+//@update columns
 router.put('/:id', verifyToken, async (req, res) => {
     const {
         columnName,

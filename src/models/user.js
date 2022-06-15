@@ -15,6 +15,11 @@ module.exports = (sequelize, DataTypes) => {
         foreignKey: 'createBy',
         as: "Cards"
       });
+      Users.hasMany(models.Columns, {
+        foreignKey: 'createColumnBy',
+        as: "Columns"
+      });
+
     }
   }
   Users.init({

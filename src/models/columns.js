@@ -12,15 +12,29 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Columns.hasMany(models.Cards, {
         foreignKey: 'idColumn',
-        as: "Cards"
+        as: "cards"
       });
+      Columns.belongsTo(models.Users, {
+        foreignKey: 'createColumnBy',
+        as: "user_info",
+      })
 
     }
   }
   Columns.init({
     columnName: {
       type: DataTypes.STRING,
-      allowNull: false
+      allowNull: false,
+
+
+    },
+    createColumnBy: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: "Users",
+        key: "id",
+        as: "createColumnBy"
+      }
     },
     description: DataTypes.STRING,
     // cardOder: DataTypes.STRING

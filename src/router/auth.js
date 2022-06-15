@@ -163,8 +163,8 @@ router.put('/:id', verifyToken, async (req, res) => {
     } = req.body
 
     try {
-
         const logoutUser = await Users.findByPk(req.params.id)
+
         console.log(logoutUser)
 
         //User not authorised or post not found 

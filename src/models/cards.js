@@ -14,13 +14,13 @@ module.exports = (sequelize, DataTypes) => {
     static associate(models) {
       Cards.belongsTo(models.Users, {
         foreignKey: 'createBy',
-        as: "User",
+        as: "user_info",
       })
 
       ;
       Cards.belongsTo(models.Columns, {
         foreignKey: 'idColumn',
-        as: "Columns"
+        as: "column_info"
       });
 
     }
