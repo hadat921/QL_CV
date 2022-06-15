@@ -5,7 +5,7 @@
     "database": "test",
     "host": "localhost",
     "dialect": "postgres",
-    "port": "49154"
+    "port": "5435"
     
   },
   "test": {

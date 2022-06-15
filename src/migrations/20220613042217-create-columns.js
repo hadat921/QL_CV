@@ -8,15 +8,16 @@ module.exports = {
         primaryKey: true,
         type: Sequelize.INTEGER
       },
-      colunmName: {
-        type: Sequelize.STRING
+      columnName: {
+        type: Sequelize.STRING,
+        allowNull: false,
       },
       description: {
         type: Sequelize.STRING
       },
-      cardOder: {
-        type: Sequelize.STRING
-      },
+      // cardOder: {
+      //   type: Sequelize.STRING
+      // },
       createdAt: {
         allowNull: false,
         type: Sequelize.DATE

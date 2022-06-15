@@ -12,17 +12,23 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       Users.hasMany(models.Cards, {
-        foreignKey: 'createBy'
-      });   }
+        foreignKey: 'createBy',
+        as: "Cards"
+      });
+    }
   }
   Users.init({
     userName: DataTypes.STRING,
     realName: DataTypes.STRING,
-    address: DataTypes.STRING,
+    email: DataTypes.STRING,
     password: DataTypes.STRING,
     avatar: DataTypes.STRING,
     phoneNumber: DataTypes.STRING,
-    
+    accessToken: {
+      type: DataTypes.STRING,
+      defaultValue: "",
+    },
+
 
 
 

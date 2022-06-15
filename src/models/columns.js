@@ -11,15 +11,19 @@ module.exports = (sequelize, DataTypes) => {
      */
     static associate(models) {
       Columns.hasMany(models.Cards, {
-        foreignKey: 'cardOder'
+        foreignKey: 'idColumn',
+        as: "Cards"
       });
-      
+
     }
   }
   Columns.init({
-    colunmName: DataTypes.STRING,
+    columnName: {
+      type: DataTypes.STRING,
+      allowNull: false
+    },
     description: DataTypes.STRING,
-    cardOder: DataTypes.STRING
+    // cardOder: DataTypes.STRING
   }, {
     sequelize,
     modelName: 'Columns',

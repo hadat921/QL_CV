@@ -15,26 +15,7 @@ const verifyToken = require('../middleware/auth');
 
 //get api check
 
-router.get('/', verifyToken, async (req, res) => {
-    try {
-        const user = await Users.findById(req.userId) //.select('-password')
-        if (!user)
-            return res.status(400).json({
-                success: false,
-                message: 'dont find user'
-            })
-        res.json({
-            success: true,
-            user
-        })
-    } catch (error) {
-        console.log(error)
-        res.status(500).json({
-            success: false,
-            message: 'Internal server error'
-        })
-    }
-})
+
 
 //register
 
@@ -86,13 +67,9 @@ router.post('/register', async (req, res) => {
             const newUser = await Users.create(dataInsert)
             await newUser.save()
 
-            const accessToken = jwt.sign({
-                userId: newUser.id
-            }, process.env.ACESS_TOKEN_SECRET)
             res.json({
                 success: true,
                 message: 'User created Success',
-                accessToken
             })
         }
 
@@ -110,10 +87,111 @@ router.post('/register', async (req, res) => {
     }
 })
 
+router.post('/login', async (req, res) => {
+    const {
+        password,
+        userName,
+    } = req.body
+    if (!userName || !password)
+        return res.status(400).json({
+            success: false,
+            message: 'Missing username or  password'
+        })
+    try {
+        //check for existing user
+        const user = await Users.findOne({
+
+            where: {
+                userName: userName.toLowerCase().toString()
+            }
+        })
+
+
+        console.log(user);
+
+        if (!user)
+            return res.status(400).json({
+                success: false,
+                message: 'Incorect user name'
+            })
+
+
+        //Username found columnName
+        const passwordValid = await argon2.verify(user.password, password)
+        if (!passwordValid)
+            return res.status(400).json({
+                success: false,
+                message: 'Incorect  password'
+            })
+
+
+        //Pass valid 
+        const accessToken = jwt.sign({
+            payload: user.id
+        }, process.env.ACESS_TOKEN_SECRET);
+
+        await user.update({
+            accessToken: accessToken
+
+        })
+
+
+        res.json({
+            userName: userName,
+            success: true,
+            message: 'Login thanh cong',
+            accessToken,
+
+
+        })
+
+
+
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error11'
+        })
+
+    }
+})
+///@logout
+router.put('/:id', verifyToken, async (req, res) => {
+    const {
+        accessToken = null,
+    } = req.body
+
+    try {
+
+        const logoutUser = await Users.findByPk(req.params.id)
+        console.log(logoutUser)
+
+        //User not authorised or post not found 
+        if (!logoutUser)
+            return res.status(401).json({
+                success: false,
+                message: 'Không tìm thấy User'
+            })
+
+        await logoutUser.update({
+                accessToken: accessToken
+            }
+
+        );
+        res.json({
+            success: true,
+            message: "Logout thanh cong"
+
+        })
+    } catch (error) {
+        console.log(error)
+        res.status(500).json({
+            success: false,
+            message: 'Internal server error'
+        })
+
+    }
+})
+
 module.exports = router;
-
-
-
-
-//login
-//logout

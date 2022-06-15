@@ -24,10 +24,20 @@ module.exports = {
         type: Sequelize.STRING
       },
       idColumn: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER,
+        // references: {
+        //   model: "Columns",
+        //   key: "id",
+        //   as: "idColumn"
+        // }
       },
       createBy: {
-        type: Sequelize.STRING
+        type: Sequelize.INTEGER,
+        // references: {
+        //   model: "Users",
+        //   key: "id",
+        //   as: "createBy"
+        // }
       },
       createdAt: {
         allowNull: false,
@@ -38,7 +48,7 @@ module.exports = {
         type: Sequelize.DATE
       },
       token: {
-        allowNull: false,
+        allowNull: true,
         type: Sequelize.STRING
       }
     });

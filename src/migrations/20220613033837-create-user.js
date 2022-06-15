@@ -11,7 +11,7 @@ module.exports = {
       realName: {
         type: Sequelize.STRING
       },
-      userName:{
+      userName: {
         type: Sequelize.STRING
 
       },
@@ -29,14 +29,20 @@ module.exports = {
         allowNull: false,
         type: Sequelize.DATE
       },
-      phoneNumber:{
+      phoneNumber: {
         allowNull: false,
         type: Sequelize.STRING
       },
-      address:{
+      email: {
         allowNull: true,
         type: Sequelize.STRING
+      },
+      accessToken: {
+        default: "",
+        type: Sequelize.STRING
+
       }
+
     });
   },
   async down(queryInterface, Sequelize) {

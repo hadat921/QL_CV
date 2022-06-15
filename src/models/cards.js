@@ -12,9 +12,17 @@ module.exports = (sequelize, DataTypes) => {
      * The `models/index` file will call this method automatically.
      */
     static associate(models) {
-      Cards.belongsTo(models.Users); 
-      Cards.belongsTo(models.Columns); 
-      
+      Cards.belongsTo(models.Users, {
+        foreignKey: 'createBy',
+        as: "User",
+      })
+
+      ;
+      Cards.belongsTo(models.Columns, {
+        foreignKey: 'idColumn',
+        as: "Columns"
+      });
+
     }
   }
   Cards.init({
@@ -23,10 +31,23 @@ module.exports = (sequelize, DataTypes) => {
     description: DataTypes.STRING,
     attachment: DataTypes.STRING,
     comment: DataTypes.STRING,
-    idColumn: DataTypes.STRING,
-    createBy: DataTypes.STRING,
-    createAt: DataTypes.DATE,
-    updateAt: DataTypes.DATE,
+    idColumn: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: "Columns",
+        key: "id",
+        as: "idColumn"
+      }
+    },
+    createBy: {
+      type: DataTypes.INTEGER,
+      references: {
+        model: "Users",
+        key: "id",
+        as: "createBy"
+      }
+    }
+
 
 
   }, {
