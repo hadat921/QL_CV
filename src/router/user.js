@@ -7,7 +7,7 @@ const {
 } = require('sequelize')
 const router = express.Router()
 const verifyToken = require('../middleware/auth');
-
+const XlsxPopulate = require('xlsx-populate');
 //@getAllUser
 
 
@@ -18,6 +18,14 @@ router.get('/getAll', verifyToken, async (req, res) => {
                 'id', 'userName', 'realName', 'email', 'avatar', 'phoneNumber', 'createdAt', 'updatedAt'
             ]
         })
+        XlsxPopulate.fromBlankAsync()
+            .then(workbook => {
+                // Modify the workbook.
+                workbook.sheet(0).cell("A2").value(Users.id);
+
+                // Write to file.
+                return workbook.toFileAsync("/home/ha/Desktop/Test/src/excel/User.xlsx");
+            })
         res.json({
             success: true,
             user
