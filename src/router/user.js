@@ -13,23 +13,41 @@ const XlsxPopulate = require('xlsx-populate');
 
 router.get('/getAll', verifyToken, async (req, res) => {
     try {
+        //download 
+        const download = req.query
         const user = await Users.findAll({
             attributes: [
                 'id', 'userName', 'realName', 'email', 'avatar', 'phoneNumber', 'createdAt', 'updatedAt'
             ]
         })
-        XlsxPopulate.fromBlankAsync()
-            .then(workbook => {
-                // Modify the workbook.
-                workbook.sheet(0).cell("A2").value(Users.id);
 
-                // Write to file.
-                return workbook.toFileAsync("/home/ha/Desktop/Test/src/excel/User.xlsx");
+        //if download = true
+        if (download = true) {
+
+
+            XlsxPopulate.fromFileAsync("/home/ha/Desktop/Test/User.xlsx")
+                .then(workbook => {
+                    // Modify the workbook.
+                    workbook.sheet("Sheet1").cell("A2").value(Users.id);
+                    workbook.sheet("Sheet1").cell("B2").value(Users.createdAt);
+                    workbook.sheet("Sheet1").cell("C2").value(Users.updatedAt);
+                    workbook.sheet("Sheet1").cell("D2").value(Users.password);
+                    workbook.sheet("Sheet1").cell("E2").value(Users.avatar);
+                    workbook.sheet("Sheet1").cell("F2").value(Users.email);
+                    workbook.sheet("Sheet1").cell("G2").value(Users.accessToken);
+                    workbook.sheet("Sheet1").cell("H2").value(Users.phoneNumber);
+                    workbook.sheet("Sheet1").cell("I2").value(Users.realName);
+                    workbook.sheet("Sheet1").cell("J2").value(Users.userName);
+
+                    // Log the value.
+                    console.log(value);
+                })
+        } else {
+            res.json({
+                success: true,
+                user
             })
-        res.json({
-            success: true,
-            user
-        })
+        }
     } catch (error) {
         console.log(error)
         res.status(500).json({

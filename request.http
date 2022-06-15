@@ -1,9 +1,9 @@
-POST   http://localhost:8080/api/auth/register
+POST   http://localhost:4567/auth/register
 Content-Type: application/json
 
 {
-    "userName":"VinhXuan112341511",
-    "password":"123",
-    "phoneNumber":"1"
+    "userName":"VinhXuana11234151a1",
+    "password":"12a31",
+    "phoneNumber":"122a2"
 
 }
