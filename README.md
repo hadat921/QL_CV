@@ -9,7 +9,7 @@
 2. open http://localhost:4567 to open the site in your favorite browser
 
 ## **Enviroment variable**
-### **Create file .ENV
+### Create file .ENV
     #### 1.DB_USERNAME = is a Name of Database
     #### 2.DB_PASSWORD = Database password
     #### 3.ACESS_TOKEN_SECRET = is a Token of Json web token
