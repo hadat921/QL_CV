@@ -10,9 +10,9 @@
 
 ## **Enviroment variable**
 ### Create file .ENV
-    #### 1.DB_USERNAME = is a Name of Database
-    #### 2.DB_PASSWORD = Database password
-    #### 3.ACESS_TOKEN_SECRET = is a Token of Json web token
-    #### 4.URL_HOST= is a link localhost.
+     1.DB_USERNAME = is a Name of Database
+     2.DB_PASSWORD = Database password
+     3.ACESS_TOKEN_SECRET = is a Token of Json web token
+     4.URL_HOST= is a link localhost.
 
     
