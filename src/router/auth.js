@@ -7,6 +7,9 @@ import {
 } from "../models"
 const router = express.Router()
 import argon2 from "argon2"
+import {
+    NULL
+} from "xlsx-populate/lib/FormulaError";
 const jwt = require('jsonwebtoken')
 const verifyToken = require('../middleware/auth');
 
@@ -112,7 +115,7 @@ router.post('/login', async (req, res) => {
         if (!user)
             return res.status(400).json({
                 success: false,
-                message: 'Incorect user name'
+                message: 'Incorect user name or password'
             })
 
 
@@ -121,7 +124,7 @@ router.post('/login', async (req, res) => {
         if (!passwordValid)
             return res.status(400).json({
                 success: false,
-                message: 'Incorect  password'
+                message: 'Incorect user name or password'
             })
 
 
@@ -157,18 +160,24 @@ router.post('/login', async (req, res) => {
     }
 })
 ///@logout
-router.put('/:id', verifyToken, async (req, res) => {
+router.put('/:accesstokens', verifyToken, async (req, res) => {
     const {
         accessToken = null,
     } = req.body
 
     try {
-        const logoutUser = await Users.findByPk(req.params.id)
 
-        console.log(logoutUser)
+        const logoutUser = await Users.findByPk(
+
+            req.userId
+
+        )
+
+
+        console.log(logoutUser.accessToken)
 
         //User not authorised or post not found 
-        if (!logoutUser)
+        if (!logoutUser.accessToken === accessToken)
             return res.status(401).json({
                 success: false,
                 message: 'Không tìm thấy User'

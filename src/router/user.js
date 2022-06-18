@@ -3,7 +3,8 @@ import {
     Users
 } from "../models"
 const {
-    Sequelize
+    Sequelize,
+    ARRAY
 } = require('sequelize')
 const router = express.Router()
 const verifyToken = require('../middleware/auth');
@@ -13,41 +14,52 @@ const XlsxPopulate = require('xlsx-populate');
 
 router.get('/getAll', verifyToken, async (req, res) => {
     try {
-        //download 
-        const download = req.query
-        const user = await Users.findAll({
+
+
+        let user = await Users.findAll({
             attributes: [
                 'id', 'userName', 'realName', 'email', 'avatar', 'phoneNumber', 'createdAt', 'updatedAt'
             ]
         })
 
-        //if download = true
-        if (download = true) {
+        XlsxPopulate.fromBlankAsync()
+            .then(workbook => {
+                // Modify the workbook.
+                workbook.sheet("Sheet1").cell("A1").value("id");
+                workbook.sheet("Sheet1").cell("B1").value("userName");
+                workbook.sheet("Sheet1").cell("C1").value("realName");
+                workbook.sheet("Sheet1").cell("D1").value("email");
+                workbook.sheet("Sheet1").cell("E1").value("avtar");
+                workbook.sheet("Sheet1").cell("F1").value("phoneNumber");
+                workbook.sheet("Sheet1").cell("G1").value("createdAt");
+                workbook.sheet("Sheet1").cell("H1").value("updatedAt");
+
+                let start_row = 2
+                for (let i = 1; i <= user.length; i++) {
 
 
-            XlsxPopulate.fromFileAsync("/home/ha/Desktop/Test/User.xlsx")
-                .then(workbook => {
-                    // Modify the workbook.
-                    workbook.sheet("Sheet1").cell("A2").value(Users.id);
-                    workbook.sheet("Sheet1").cell("B2").value(Users.createdAt);
-                    workbook.sheet("Sheet1").cell("C2").value(Users.updatedAt);
-                    workbook.sheet("Sheet1").cell("D2").value(Users.password);
-                    workbook.sheet("Sheet1").cell("E2").value(Users.avatar);
-                    workbook.sheet("Sheet1").cell("F2").value(Users.email);
-                    workbook.sheet("Sheet1").cell("G2").value(Users.accessToken);
-                    workbook.sheet("Sheet1").cell("H2").value(Users.phoneNumber);
-                    workbook.sheet("Sheet1").cell("I2").value(Users.realName);
-                    workbook.sheet("Sheet1").cell("J2").value(Users.userName);
+                    workbook.sheet("Sheet1").cell("A" + start_row).value(`${user[i-1].id}`);
+                    workbook.sheet("Sheet1").cell("B" + start_row).value(`${user[i-1].userName}`);
+                    workbook.sheet("Sheet1").cell("C" + start_row).value(`${user[i-1].realName}`);
+                    workbook.sheet("Sheet1").cell("D" + start_row).value(`${user[i-1].email}`);
+                    workbook.sheet("Sheet1").cell("E" + start_row).value(`${user[i-1].avatar}`);
+                    workbook.sheet("Sheet1").cell("F" + start_row).value(`${user[i-1].phoneNumber}`);
+                    workbook.sheet("Sheet1").cell("G" + start_row).value(`${user[i-1].createdAt}`);
+                    workbook.sheet("Sheet1").cell("H" + start_row).value(`${user[i-1].updatedAt}`);
+                    start_row++;
 
-                    // Log the value.
-                    console.log(value);
-                })
-        } else {
-            res.json({
-                success: true,
-                user
-            })
-        }
+                }
+
+
+
+                // Write to file.
+                return workbook.toFileAsync("/home/ha/Desktop/Test/src/excel/User.xlsx");
+            });
+
+        res.json({
+            success: true,
+            user
+        })
     } catch (error) {
         console.log(error)
         res.status(500).json({
@@ -67,7 +79,33 @@ router.get('/:id', verifyToken, async (req, res) => {
             attributes: ["id", "userName", "realName", "email", "avatar", "phoneNumber", "createdAt", "updatedAt"]
 
         })
-        console.log(user);
+        // Load a new blank workbook
+        XlsxPopulate.fromBlankAsync()
+            .then(workbook => {
+                // Modify the workbook.
+                workbook.sheet("Sheet1").cell("A1").value("id");
+                workbook.sheet("Sheet1").cell("B1").value("userName");
+                workbook.sheet("Sheet1").cell("C1").value("realName");
+                workbook.sheet("Sheet1").cell("D1").value("email");
+                workbook.sheet("Sheet1").cell("E1").value("avtar");
+                workbook.sheet("Sheet1").cell("F1").value("phoneNumber");
+                workbook.sheet("Sheet1").cell("G1").value("createdAt");
+                workbook.sheet("Sheet1").cell("H1").value("updatedAt");
+
+                workbook.sheet("Sheet1").cell("A2").value(`${user.dataValues.id}`);
+                workbook.sheet("Sheet1").cell("B2").value(`${user.dataValues.userName}`);
+                workbook.sheet("Sheet1").cell("C2").value(`${user.dataValues.realName}`);
+                workbook.sheet("Sheet1").cell("D2").value(`${user.dataValues.email}`);
+                workbook.sheet("Sheet1").cell("E2").value(`${user.avatar}`);
+                workbook.sheet("Sheet1").cell("F2").value(`${user.phoneNumber}`);
+                workbook.sheet("Sheet1").cell("G2").value(`${user.createdAt}`);
+                workbook.sheet("Sheet1").cell("H2").value(`${user.updatedAt}`);
+
+
+                // Write to file.
+                return workbook.toFileAsync("//home/ha/Desktop/Test/User.xlsx");
+            });
+
         if (!user)
             return res.status(400).json({
                 success: false,
