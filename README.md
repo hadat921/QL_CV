@@ -1,7 +1,7 @@
 # QL_CV
 ## **Getting started**
 1. NODEJS v12.22.9
-##**Installation**
+## **Installation**
 1. cd to file TEST to go into the project root
 2. npm install to install dependencies
 ## **Running locally**
